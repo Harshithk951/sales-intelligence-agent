@@ -2,7 +2,7 @@
 
 **Capstone Project - AI Agents Intensive Course (Nov 2025)**  
 **Track:** Enterprise Agents  
-**Author:** [Your Name]
+**Author:** Harshith  
 
 ---
 
