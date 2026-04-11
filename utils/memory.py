@@ -21,6 +21,7 @@ class SessionMemory:
         """Initialize empty session state"""
         self.session_data = {}
         self.session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.errors = []
         agent_logger.info(f"🆔 Session initialized: {self.session_id}")
     
     def store(self, key: str, value: Any):
@@ -28,15 +29,39 @@ class SessionMemory:
         self.session_data[key] = value
         agent_logger.log_memory_access("WRITE", key)
     
+    def update(self, key: str, value: Any):
+        """Update data in current session (alias for store)"""
+        self.store(key, value)
+    
     def retrieve(self, key: str) -> Optional[Any]:
         """Retrieve data from current session"""
         value = self.session_data.get(key)
         agent_logger.log_memory_access("READ", key)
         return value
     
+    def get(self, key: str) -> Optional[Any]:
+        """Get data from session (alias for retrieve)"""
+        return self.retrieve(key)
+    
     def get_all(self) -> Dict[str, Any]:
         """Get all session data"""
         return self.session_data.copy()
+    
+    def get_full_state(self) -> Dict[str, Any]:
+        """Get complete session state including errors"""
+        return {
+            "session_id": self.session_id,
+            "data": self.session_data.copy(),
+            "errors": self.errors.copy()
+        }
+    
+    def add_error(self, error_message: str):
+        """Add an error to the session"""
+        self.errors.append({
+            "timestamp": datetime.now().isoformat(),
+            "message": error_message
+        })
+        agent_logger.error(f"Session Error: {error_message}")
     
     def clear(self):
         """Clear session data"""
@@ -112,6 +137,10 @@ class MemoryBank:
         key = f"company_{company_name.lower().replace(' ', '_')}"
         return key in self.memory
     
+    def has_company(self, company_name: str) -> bool:
+        """Check if we have research for a company (alias)"""
+        return self.has_company_research(company_name)
+    
     def get_all_companies(self) -> list:
         """Get list of all researched companies"""
         companies = [
@@ -139,3 +168,6 @@ class MemoryBank:
 # Global instances
 session_memory = SessionMemory()
 memory_bank = MemoryBank()
+
+# Aliases for backward compatibility
+SessionState = SessionMemory

@@ -9,7 +9,7 @@ from typing import List, Dict, Any
 from utils.logger import agent_logger
 
 
-class SearchTool:
+class GoogleSearchTool:
     """
     Custom search tool that uses multiple search methods
     Primary: Google Custom Search API
@@ -43,12 +43,12 @@ class SearchTool:
             # Simulated search results for demo
             return self._simulated_company_search(company_name)
     
-    def search_company_news(self, company_name: str) -> Dict[str, Any]:
+    def search_company_news(self, company_name: str, limit: int = None) -> Dict[str, Any]:
         """
         Search for recent news about the company
         Returns latest news articles and announcements
         """
-        agent_logger.log_tool_call("search_company_news", {"company_name": company_name})
+        agent_logger.log_tool_call("search_company_news", {"company_name": company_name, "limit": limit})
         
         if self.use_google_api:
             return self._google_search(f"{company_name} news recent")

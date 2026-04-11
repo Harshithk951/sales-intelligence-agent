@@ -82,3 +82,20 @@ class AgentLogger:
 
 # Global logger instance
 agent_logger = AgentLogger()
+
+# Convenience functions for agent imports
+def setup_logger(name: str):
+    """Setup logger for an agent"""
+    return agent_logger
+
+def log_agent_start(agent_name: str, input_data: Dict[str, Any]):
+    """Log when an agent starts execution"""
+    agent_logger.log_agent_start(agent_name, input_data)
+
+def log_agent_complete(agent_name: str, message: str = ""):
+    """Log when an agent completes execution"""
+    agent_logger.info(f"✅ {agent_name} COMPLETED {message}")
+
+def log_agent_error(agent_name: str, error: Exception):
+    """Log errors during agent execution"""
+    agent_logger.log_error(agent_name, error)
